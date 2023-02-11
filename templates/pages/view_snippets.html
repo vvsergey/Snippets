@@ -1,48 +1,71 @@
 {% extends 'base.html' %}
+{% load my_tags %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col text-center">
-            <h1>{{ pagename }}</h1>
-            <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h1>{{ pagename }}</h1>
+                <hr>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col">
-            <p>На данной страницы будут отображаться все созданные сниппеты.</p>
-            <p>Пока тут просто пример, но скоро заменим реальными сниппетами из БД!</p>
-            <hr>
+        <div class="row">
+            <div class="col">
+                <p>На данной страницы будут отображаться все созданные сниппеты.</p>
+                <p>Пока тут просто пример, но скоро заменим реальными сниппетами из БД!</p>
+                <hr>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col">
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Название</th>
-                    <th scope="col">Дата создания</th>
-                    <th scope="col">Автор</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for snippet in snippets %}
-                <tr>
-                    <td scope="row">{{ snippet.id }}</td>
-                    <td><a href="{% url 'snippet-detail' snippet.id %}">{{ snippet.name }}</a></td>
-                    <td>{{ snippet.creation_date }}</td>
-                    <td>{{ snippet.user }}</td>
-                </tr>
-                {% endfor %}
+        <div class="row">
+            <div class="col">
+                <form method="get" action="">
+                    <select name="lang">
+                        <option {% if lang == 'py' %}selected {% endif %} value="py">python</option>
+                        <option {% if lang == 'js' %}selected {% endif %} value="js">JavaScript</option>
+                        <option {% if lang == 'cpp' %}selected {% endif %}value="cpp">C++</option>
+                    </select>
+                    <button type="submit">Применить</button>
+                <a href="...">Сброс</a>
+                </form>
 
-                </tbody>
-            </table>
-            <div align="right">
-                <i style="color: gray;">Всего сниппетов: 2</i>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Дата создания</th>
+                        <th scope="col">Автор</th>
+                        <th scope="col">Язык</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for snippet in snippets %}
+                        <tr>
+                            <td scope="row">{{ snippet.id }}</td>
+                            <td>
+                                <a href="{% url 'snippet-detail' snippet.id %}">{{ snippet.name }}</a>
+                                <a href="{% url 'snippet-delete' snippet.id %}">
+                                    <i style="color: red" class="fa-sharp fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                            <td>{{ snippet.creation_date }}</td>
+                            <td>{{ snippet.user|is_empty:"аноним" }}</td>
+                            <td>{{ snippet.lang }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                <div align="right">
+                    <i style="color: gray;">Всего сниппетов: 2</i>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
